@@ -1,15 +1,26 @@
 resources:
-  - name: controller
+  - name: breakfastly
+    type: time
+    source: {interval: 1m}
+
+  - name: our-git-repo
     type: git
     source:
-      uri: git@github.com:my-org/controller.git
-      branch: master
+      uri: https://github.com/pivotalleye/yarg.git
 
 jobs:
-  - name: controller-mysql
+  - name: breakfast-test-run
     plan:
-      - get: controller
-      - task: unit
-        file: controller/ci/mysql.yml
-
-          from: deploy/release/build/*.tgz
+      - get: our-git-repo
+        trigger: true
+      - get: breakfastly
+        trigger: true
+      - task: dummy-task
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: {repository: ubuntu}
+          run:
+            path: exit
+            args: [1]
