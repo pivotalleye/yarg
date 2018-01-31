@@ -1,0 +1,15 @@
+resources:
+  - name: controller
+    type: git
+    source:
+      uri: git@github.com:my-org/controller.git
+      branch: master
+
+jobs:
+  - name: controller-mysql
+    plan:
+      - get: controller
+      - task: unit
+        file: controller/ci/mysql.yml
+
+          from: deploy/release/build/*.tgz
